@@ -2,124 +2,148 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>EMon Prompt Generator - VIP Style</title>
+  <title>Emon Prompt Generator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron&family=Roboto&display=swap" rel="stylesheet">
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
     body {
-      background: #0d0d0d;
-      color: #ffffff;
-      font-family: 'Segoe UI', sans-serif;
+      font-family: 'Roboto', sans-serif;
+      background: radial-gradient(circle at center, #0f0f0f, #050505);
+      color: #fff;
       padding: 40px 20px;
       display: flex;
       flex-direction: column;
       align-items: center;
     }
     h1 {
-      font-size: 32px;
-      color: #00ffc8;
-      margin-bottom: 10px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 38px;
+      margin-bottom: 20px;
+      background: linear-gradient(to right, #00ffc8, #00ccff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
     textarea, input {
       width: 100%;
       max-width: 600px;
-      background: #1a1a1a;
+      background: rgba(255,255,255,0.05);
       color: #ffffff;
-      border: none;
+      border: 1px solid #444;
       padding: 15px;
       font-size: 16px;
       border-radius: 10px;
-      margin: 10px 0;
+      margin-top: 15px;
+      backdrop-filter: blur(6px);
     }
     button {
-      background: linear-gradient(45deg, #00ffc8, #00ccff);
+      background: linear-gradient(90deg, #00ffc8, #00ccff);
       color: #000;
       font-weight: bold;
-      padding: 12px 30px;
+      padding: 12px 28px;
       font-size: 16px;
       border: none;
-      border-radius: 10px;
+      border-radius: 50px;
       cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0, 255, 200, 0.4);
-      transition: all 0.2s ease;
+      margin-top: 20px;
+      box-shadow: 0 0 20px rgba(0,255,200,0.3);
+      transition: 0.3s ease;
     }
     button:hover {
       transform: scale(1.05);
     }
     .output {
-      margin-top: 30px;
+      margin-top: 40px;
       width: 100%;
       max-width: 700px;
     }
     .prompt {
-      background: #1e1e1e;
+      background: rgba(255,255,255,0.05);
       padding: 20px;
       border-radius: 10px;
       margin-bottom: 20px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.6);
+      border-left: 5px solid #00ffc8;
+      backdrop-filter: blur(6px);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.6);
     }
     .prompt strong {
       font-size: 18px;
       color: #00ffc8;
     }
     .copy-btn {
-      background: #333333;
-      color: #ffffff;
-      padding: 6px 12px;
-      border: none;
-      border-radius: 6px;
+      background: #222;
+      color: #00ffc8;
+      padding: 6px 14px;
+      border: 1px solid #00ffc8;
+      border-radius: 8px;
       cursor: pointer;
-      margin-top: 8px;
-      font-size: 14px;
+      margin-top: 10px;
+    }
+    .copy-btn:hover {
+      background: #00ffc8;
+      color: #000;
     }
     .timer {
-      font-size: 14px;
-      color: #888;
       text-align: center;
-      margin-top: 10px;
+      font-size: 14px;
+      color: #999;
+      margin-top: 15px;
+    }
+    footer {
+      margin-top: 60px;
+      color: #777;
+      font-size: 14px;
     }
   </style>
 </head>
 <body>
   <h1>🚀 EMon Prompt Generator</h1>
-  <textarea id="userInput" placeholder="Write your idea or something like: 'Give me a prompt where Emon is written'..."></textarea>
-  <input type="text" id="userName" placeholder="🔤 Optional: Add your name to include in the prompt" />
-  <button onclick="generatePrompt()">🎨 Generate Prompts</button>
+  <textarea id="userInput" placeholder="Write your prompt or just say: EMon give a prompt..."></textarea>
+  <input type="text" id="userName" placeholder="Optional: Add your name to include in the scene" />
+  <button onclick="generatePrompt()">✨ Generate Prompts</button>
+
   <div id="result" class="output"></div>
 
+  <footer>Made with ❤️ by EMon-BHai | Powered by Gemini 2.0 Flash</footer>
+
   <script>
-    const API_KEY = "AIzaSyDfj1K8t3p9ObXnz1wxjVFSvm3nxDSz8W8"; // ✅ Replace with your real key
+    const API_KEY = "AIzaSyDfj1K8t3p9ObXnz1wxjVFSvm3nxDSz8W8"; // your key
     const MODEL = "gemini-2.0-flash";
 
     async function generatePrompt() {
-      const inputText = document.getElementById("userInput").value.trim();
-      const userName = document.getElementById("userName").value.trim();
+      const input = document.getElementById("userInput").value.trim();
+      const name = document.getElementById("userName").value.trim();
       const resultDiv = document.getElementById("result");
 
-      if (!inputText) {
-        alert("Please enter something to generate a prompt.");
+      if (!input) {
+        alert("Please type something!");
         return;
       }
 
       resultDiv.innerHTML = "⏳ Generating prompts...";
-      const startTime = Date.now();
+      const start = Date.now();
 
-      let promptContent = inputText;
+      let basePrompt = input;
 
-      if (/give.*prompt|prompt daw|prompt দাও|ভাই.*prompt/i.test(inputText)) {
-        promptContent = "Generate a random creative AI image prompt idea.";
+      if (/give.*prompt|prompt daw|prompt দাও|ভাই.*prompt/i.test(input)) {
+        basePrompt = "Generate a random creative AI image prompt.";
       }
 
-      if ((/name|নাম|লেখা/i.test(inputText) || userName) && userName !== "") {
-        promptContent += ` Include the name "${userName}" creatively inside the scene (e.g., wall, screen, shirt, sky).`;
+      if ((/name|নাম|লেখা/i.test(input) || name) && name !== "") {
+        basePrompt += ` Include the name "${name}" inside the scene in a creative way (wall, shirt, sky, etc).`;
       }
 
       const fullPrompt = `
-You are a professional AI image prompt writer. Based on this input: "${promptContent}", generate 4 different prompt types:
-1. Short Prompt
-2. Long Cinematic Prompt
-3. Futuristic Style
-4. Dreamy / Fantasy Mood
+You are a skilled AI prompt engineer. Based on: "${basePrompt}", give exactly 4 image prompts:
+1. Short Style
+2. Cinematic Look
+3. Futuristic Theme
+4. Dreamy or Fantasy Mood
 
-Only give prompts, no extra explanation.
+Only give prompts. No explanation.
 `;
 
       try {
@@ -132,8 +156,8 @@ Only give prompts, no extra explanation.
         });
 
         const data = await res.json();
-        const outputText = data?.candidates?.[0]?.content?.parts?.[0]?.text || "❌ No response from AI.";
-        const prompts = outputText.split(/\d+\.\s/).filter(p => p.trim());
+        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || "❌ No response from AI.";
+        const prompts = text.split(/\d+\.\s/).filter(p => p.trim());
 
         let html = "";
         prompts.forEach((p, i) => {
@@ -141,25 +165,23 @@ Only give prompts, no extra explanation.
             <div class="prompt">
               <strong>Prompt ${i + 1}</strong>
               <p>${p.trim()}</p>
-              <button class="copy-btn" onclick="copyPrompt(this)">📋 Copy</button>
+              <button class="copy-btn" onclick="copyText(this)">📋 Copy</button>
             </div>`;
         });
 
-        const duration = ((Date.now() - startTime) / 1000).toFixed(2);
-        html += `<div class="timer">⏱️ Generated in ${duration}s</div>`;
-        resultDiv.innerHTML = html;
-
+        const time = ((Date.now() - start) / 1000).toFixed(2);
+        resultDiv.innerHTML = html + `<div class="timer">⏱️ Generated in ${time}s</div>`;
       } catch (err) {
         console.error(err);
-        resultDiv.innerHTML = "❌ Something went wrong. Check your API key or internet connection.";
+        resultDiv.innerHTML = "❌ Error occurred. Check your API key.";
       }
     }
 
-    function copyPrompt(button) {
-      const text = button.previousElementSibling.innerText;
+    function copyText(btn) {
+      const text = btn.previousElementSibling.innerText;
       navigator.clipboard.writeText(text);
-      button.innerText = "✅ Copied!";
-      setTimeout(() => button.innerText = "📋 Copy", 1500);
+      btn.innerText = "✅ Copied!";
+      setTimeout(() => btn.innerText = "📋 Copy", 1500);
     }
   </script>
 </body>
