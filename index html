@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>EMon Prompt Generator ⚡ Flash Model</title>
+  <style>
+    body {
+      background: #0f0f0f;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      padding: 30px;
+      text-align: center;
+    }
+    textarea {
+      width: 90%;
+      max-width: 600px;
+      height: 100px;
+      background: #1c1c1c;
+      color: #fff;
+      border: none;
+      padding: 15px;
+      font-size: 16px;
+      border-radius: 10px;
+      resize: none;
+    }
+    button {
+      background: #00ffc8;
+      color: #000;
+      font-weight: bold;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    .output {
+      margin-top: 30px;
+      text-align: left;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .prompt {
+      background: #1e1e1e;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 10px;
+    }
+    .copy-btn {
+      background: #333;
+      color: #fff;
+      padding: 5px 10px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 5px;
+      font-size: 14px;
+    }
+    .timer {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <h1>🚀 EMon Prompt Generator (Gemini Flash)</h1>
+  <textarea id="userInput" placeholder="Describe your idea..."></textarea><br />
+  <button onclick="generatePrompt()">🔥 Generate Prompts</button>
+  <div id="result" class="output"></div>
+
+  <script>
+    const API_KEY = "AIzaSyDfj1K8t3p9ObXnz1wxjVFSvm3nxDSz8W8"; // ✅ Your key here
+    const MODEL = "gemini-2.0-flash";
+
+    async function generatePrompt() {
+      const userText = document.getElementById("userInput").value.trim();
+      if (!userText) return alert("Please write something!");
+
+      const resultDiv = document.getElementById("result");
+      resultDiv.innerHTML = "⏳ Generating...";
+      const start = Date.now();
+
+      const prompt = `
+You are a creative prompt generator for AI images. Based on this input: "${userText}", generate exactly 4 prompt variations:
+1. Short Prompt:
+2. Long Cinematic Prompt:
+3. Futuristic Style:
+4. Dreamy / Fantasy Style:
+
+Respond clearly with each numbered section, no explanation.
+`;
+
+      try {
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${API_KEY}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }]
+          })
+        });
+
+        const data = await res.json();
+        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || "❌ No response from Gemini Flash.";
+        const prompts = text.split(/\d+\.\s/).filter(p => p.trim());
+
+        let html = "";
+        prompts.forEach((p, i) => {
+          html += `
+            <div class="prompt">
+              <strong>Prompt ${i + 1}</strong>
+              <p>${p.trim()}</p>
+              <button class="copy-btn" onclick="copyText(this)">📋 Copy</button>
+            </div>`;
+        });
+
+        const time = ((Date.now() - start) / 1000).toFixed(2);
+        resultDiv.innerHTML = html + `<div class="timer">⏱️ Generated in ${time}s</div>`;
+      } catch (err) {
+        console.error(err);
+        resultDiv.innerHTML = "❌ Error! Check console or API key.";
+      }
+    }
+
+    function copyText(btn) {
+      const text = btn.previousElementSibling.innerText;
+      navigator.clipboard.writeText(text);
+      btn.innerText = "✅ Copied!";
+      setTimeout(() => (btn.innerText = "📋 Copy"), 1500);
+    }
+  </script>
+</body>
+</html>
