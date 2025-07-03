@@ -2,14 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Emon Prompt Generator</title>
+  <title>EMon Prompt Generator</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron&family=Roboto&display=swap" rel="stylesheet">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Roboto', sans-serif;
       background: radial-gradient(circle at center, #0f0f0f, #050505);
@@ -52,9 +48,7 @@
       box-shadow: 0 0 20px rgba(0,255,200,0.3);
       transition: 0.3s ease;
     }
-    button:hover {
-      transform: scale(1.05);
-    }
+    button:hover { transform: scale(1.05); }
     .output {
       margin-top: 40px;
       width: 100%;
@@ -69,10 +63,7 @@
       backdrop-filter: blur(6px);
       box-shadow: 0 2px 8px rgba(0,0,0,0.6);
     }
-    .prompt strong {
-      font-size: 18px;
-      color: #00ffc8;
-    }
+    .prompt strong { font-size: 18px; color: #00ffc8; }
     .copy-btn {
       background: #222;
       color: #00ffc8;
@@ -96,21 +87,33 @@
       margin-top: 60px;
       color: #777;
       font-size: 14px;
+      text-align: center;
+    }
+    footer a {
+      color: #00ffc8;
+      text-decoration: none;
+      margin: 0 10px;
     }
   </style>
 </head>
 <body>
   <h1>🚀 EMon Prompt Generator</h1>
-  <textarea id="userInput" placeholder="Write your prompt or just say: EMon give a prompt..."></textarea>
-  <input type="text" id="userName" placeholder="Optional: Add your name to include in the scene" />
+  <textarea id="userInput" placeholder="Write your idea or say: EMon give a prompt..."></textarea>
+  <input type="text" id="userName" placeholder="🔤 Optional: Add your name (e.g., EMon)" />
   <button onclick="generatePrompt()">✨ Generate Prompts</button>
 
   <div id="result" class="output"></div>
 
-  <footer>Made with ❤️ by EMon-BHai | Powered by Gemini 2.0 Flash</footer>
+  <footer>
+    <p>Made with ❤️ by <strong>EMon-BHai</strong> | Powered by Gemini Flash</p>
+    <p style="margin-top: 8px;">
+      📘 <a href="https://facebook.com/EMon.BHai.FACEBOOK" target="_blank">Facebook</a> |
+      💬 <a href="https://wa.me/8801309991724" target="_blank">WhatsApp</a>
+    </p>
+  </footer>
 
   <script>
-    const API_KEY = "AIzaSyDfj1K8t3p9ObXnz1wxjVFSvm3nxDSz8W8"; // your key
+    const API_KEY = "AIzaSyDfj1K8t3p9ObXnz1wxjVFSvm3nxDSz8W8";
     const MODEL = "gemini-2.0-flash";
 
     async function generatePrompt() {
@@ -133,17 +136,17 @@
       }
 
       if ((/name|নাম|লেখা/i.test(input) || name) && name !== "") {
-        basePrompt += ` Include the name "${name}" inside the scene in a creative way (wall, shirt, sky, etc).`;
+        basePrompt += ` Include the name "${name}" inside the scene in a creative way (e.g., on a wall, shirt, sky, etc).`;
       }
 
       const fullPrompt = `
-You are a skilled AI prompt engineer. Based on: "${basePrompt}", give exactly 4 image prompts:
-1. Short Style
-2. Cinematic Look
-3. Futuristic Theme
-4. Dreamy or Fantasy Mood
+You are a skilled AI prompt engineer. Based on this input: "${basePrompt}", generate 4 image prompts:
+1. Short Prompt
+2. Long Cinematic Prompt
+3. Futuristic Style
+4. Dreamy / Fantasy Mood
 
-Only give prompts. No explanation.
+Only return the prompts. No explanation.
 `;
 
       try {
