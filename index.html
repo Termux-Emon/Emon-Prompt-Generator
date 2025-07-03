@@ -2,93 +2,124 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>EMon Prompt Generator ⚡ Flash Model</title>
+  <title>EMon Prompt Generator - VIP Style</title>
   <style>
     body {
-      background: #0f0f0f;
-      color: #fff;
-      font-family: Arial, sans-serif;
-      padding: 30px;
-      text-align: center;
+      background: #0d0d0d;
+      color: #ffffff;
+      font-family: 'Segoe UI', sans-serif;
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
-    textarea {
-      width: 90%;
+    h1 {
+      font-size: 32px;
+      color: #00ffc8;
+      margin-bottom: 10px;
+    }
+    textarea, input {
+      width: 100%;
       max-width: 600px;
-      height: 100px;
-      background: #1c1c1c;
-      color: #fff;
+      background: #1a1a1a;
+      color: #ffffff;
       border: none;
       padding: 15px;
       font-size: 16px;
       border-radius: 10px;
-      resize: none;
+      margin: 10px 0;
     }
     button {
-      background: #00ffc8;
+      background: linear-gradient(45deg, #00ffc8, #00ccff);
       color: #000;
       font-weight: bold;
-      padding: 12px 24px;
+      padding: 12px 30px;
+      font-size: 16px;
       border: none;
       border-radius: 10px;
       cursor: pointer;
-      margin-top: 10px;
+      box-shadow: 0 4px 12px rgba(0, 255, 200, 0.4);
+      transition: all 0.2s ease;
+    }
+    button:hover {
+      transform: scale(1.05);
     }
     .output {
       margin-top: 30px;
-      text-align: left;
+      width: 100%;
       max-width: 700px;
-      margin-left: auto;
-      margin-right: auto;
     }
     .prompt {
       background: #1e1e1e;
-      padding: 15px;
-      margin-bottom: 15px;
+      padding: 20px;
       border-radius: 10px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.6);
+    }
+    .prompt strong {
+      font-size: 18px;
+      color: #00ffc8;
     }
     .copy-btn {
-      background: #333;
-      color: #fff;
-      padding: 5px 10px;
+      background: #333333;
+      color: #ffffff;
+      padding: 6px 12px;
       border: none;
       border-radius: 6px;
       cursor: pointer;
-      margin-top: 5px;
+      margin-top: 8px;
       font-size: 14px;
     }
     .timer {
-      margin-top: 10px;
       font-size: 14px;
       color: #888;
+      text-align: center;
+      margin-top: 10px;
     }
   </style>
 </head>
 <body>
-  <h1>🚀 EMon Prompt Generator (Gemini Flash)</h1>
-  <textarea id="userInput" placeholder="Describe your idea..."></textarea><br />
-  <button onclick="generatePrompt()">🔥 Generate Prompts</button>
+  <h1>🚀 EMon Prompt Generator</h1>
+  <textarea id="userInput" placeholder="Write your idea or something like: 'Give me a prompt where Emon is written'..."></textarea>
+  <input type="text" id="userName" placeholder="🔤 Optional: Add your name to include in the prompt" />
+  <button onclick="generatePrompt()">🎨 Generate Prompts</button>
   <div id="result" class="output"></div>
 
   <script>
-    const API_KEY = "AIzaSyDfj1K8t3p9ObXnz1wxjVFSvm3nxDSz8W8"; // ✅ Your key here
+    const API_KEY = "AIzaSyDfj1K8t3p9ObXnz1wxjVFSvm3nxDSz8W8"; // ✅ Replace with your real key
     const MODEL = "gemini-2.0-flash";
 
     async function generatePrompt() {
-      const userText = document.getElementById("userInput").value.trim();
-      if (!userText) return alert("Please write something!");
-
+      const inputText = document.getElementById("userInput").value.trim();
+      const userName = document.getElementById("userName").value.trim();
       const resultDiv = document.getElementById("result");
-      resultDiv.innerHTML = "⏳ Generating...";
-      const start = Date.now();
 
-      const prompt = `
-You are a creative prompt generator for AI images. Based on this input: "${userText}", generate exactly 4 prompt variations:
-1. Short Prompt:
-2. Long Cinematic Prompt:
-3. Futuristic Style:
-4. Dreamy / Fantasy Style:
+      if (!inputText) {
+        alert("Please enter something to generate a prompt.");
+        return;
+      }
 
-Respond clearly with each numbered section, no explanation.
+      resultDiv.innerHTML = "⏳ Generating prompts...";
+      const startTime = Date.now();
+
+      let promptContent = inputText;
+
+      if (/give.*prompt|prompt daw|prompt দাও|ভাই.*prompt/i.test(inputText)) {
+        promptContent = "Generate a random creative AI image prompt idea.";
+      }
+
+      if ((/name|নাম|লেখা/i.test(inputText) || userName) && userName !== "") {
+        promptContent += ` Include the name "${userName}" creatively inside the scene (e.g., wall, screen, shirt, sky).`;
+      }
+
+      const fullPrompt = `
+You are a professional AI image prompt writer. Based on this input: "${promptContent}", generate 4 different prompt types:
+1. Short Prompt
+2. Long Cinematic Prompt
+3. Futuristic Style
+4. Dreamy / Fantasy Mood
+
+Only give prompts, no extra explanation.
 `;
 
       try {
@@ -96,13 +127,13 @@ Respond clearly with each numbered section, no explanation.
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            contents: [{ parts: [{ text: prompt }] }]
+            contents: [{ parts: [{ text: fullPrompt }] }]
           })
         });
 
         const data = await res.json();
-        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || "❌ No response from Gemini Flash.";
-        const prompts = text.split(/\d+\.\s/).filter(p => p.trim());
+        const outputText = data?.candidates?.[0]?.content?.parts?.[0]?.text || "❌ No response from AI.";
+        const prompts = outputText.split(/\d+\.\s/).filter(p => p.trim());
 
         let html = "";
         prompts.forEach((p, i) => {
@@ -110,23 +141,25 @@ Respond clearly with each numbered section, no explanation.
             <div class="prompt">
               <strong>Prompt ${i + 1}</strong>
               <p>${p.trim()}</p>
-              <button class="copy-btn" onclick="copyText(this)">📋 Copy</button>
+              <button class="copy-btn" onclick="copyPrompt(this)">📋 Copy</button>
             </div>`;
         });
 
-        const time = ((Date.now() - start) / 1000).toFixed(2);
-        resultDiv.innerHTML = html + `<div class="timer">⏱️ Generated in ${time}s</div>`;
+        const duration = ((Date.now() - startTime) / 1000).toFixed(2);
+        html += `<div class="timer">⏱️ Generated in ${duration}s</div>`;
+        resultDiv.innerHTML = html;
+
       } catch (err) {
         console.error(err);
-        resultDiv.innerHTML = "❌ Error! Check console or API key.";
+        resultDiv.innerHTML = "❌ Something went wrong. Check your API key or internet connection.";
       }
     }
 
-    function copyText(btn) {
-      const text = btn.previousElementSibling.innerText;
+    function copyPrompt(button) {
+      const text = button.previousElementSibling.innerText;
       navigator.clipboard.writeText(text);
-      btn.innerText = "✅ Copied!";
-      setTimeout(() => (btn.innerText = "📋 Copy"), 1500);
+      button.innerText = "✅ Copied!";
+      setTimeout(() => button.innerText = "📋 Copy", 1500);
     }
   </script>
 </body>
