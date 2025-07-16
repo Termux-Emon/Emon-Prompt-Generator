@@ -1,4 +1,276 @@
-<script>
-<!-- code by https://facebook.com/EMon.BHai.FACEBOOK" -->
-document.write(unescape('%3C%21DOCTYPE%20html%3E%0A%3Chtml%20lang%3D%22en%22%3E%0A%3Chead%3E%0A%20%20%3Cmeta%20charset%3D%22UTF-8%22%20/%3E%0A%20%20%3Cmeta%20name%3D%22viewport%22%20content%3D%22width%3Ddevice-width%2C%20initial-scale%3D1.0%22%20/%3E%0A%20%20%3Ctitle%3EEMon%20Prompt%20Generator%3C/title%3E%0A%20%20%3Clink%20href%3D%22https%3A//fonts.googleapis.com/css2%3Ffamily%3DOrbitron%26family%3DRoboto%26display%3Dswap%22%20rel%3D%22stylesheet%22%3E%0A%20%20%3Cstyle%3E%0A%20%20%20%20*%20%7B%20margin%3A%200%3B%20padding%3A%200%3B%20box-sizing%3A%20border-box%3B%20%7D%0A%20%20%20%20body%20%7B%0A%20%20%20%20%20%20font-family%3A%20%27Roboto%27%2C%20sans-serif%3B%0A%20%20%20%20%20%20background%3A%20radial-gradient%28circle%20at%20center%2C%20%230f0f0f%2C%20%23050505%29%3B%0A%20%20%20%20%20%20color%3A%20%23fff%3B%0A%20%20%20%20%20%20padding%3A%2020px%3B%0A%20%20%20%20%20%20display%3A%20flex%3B%0A%20%20%20%20%20%20flex-direction%3A%20column%3B%0A%20%20%20%20%20%20align-items%3A%20center%3B%0A%20%20%20%20%7D%0A%20%20%20%20h1%20%7B%0A%20%20%20%20%20%20font-family%3A%20%27Orbitron%27%2C%20sans-serif%3B%0A%20%20%20%20%20%20font-size%3A%207vw%3B%0A%20%20%20%20%20%20margin-bottom%3A%2015px%3B%0A%20%20%20%20%20%20background%3A%20linear-gradient%28to%20right%2C%20%2300ffc8%2C%20%2300ccff%29%3B%0A%20%20%20%20%20%20-webkit-background-clip%3A%20text%3B%0A%20%20%20%20%20%20-webkit-text-fill-color%3A%20transparent%3B%0A%20%20%20%20%20%20text-align%3A%20center%3B%0A%20%20%20%20%7D%0A%20%20%20%20textarea%2C%20input%20%7B%0A%20%20%20%20%20%20width%3A%20100%25%3B%0A%20%20%20%20%20%20max-width%3A%20100%25%3B%0A%20%20%20%20%20%20background%3A%20rgba%28255%2C255%2C255%2C0.05%29%3B%0A%20%20%20%20%20%20color%3A%20%23ffffff%3B%0A%20%20%20%20%20%20border%3A%201px%20solid%20%23444%3B%0A%20%20%20%20%20%20padding%3A%2014px%3B%0A%20%20%20%20%20%20font-size%3A%205vw%3B%0A%20%20%20%20%20%20border-radius%3A%2010px%3B%0A%20%20%20%20%20%20margin-top%3A%2015px%3B%0A%20%20%20%20%20%20backdrop-filter%3A%20blur%286px%29%3B%0A%20%20%20%20%7D%0A%20%20%20%20button%20%7B%0A%20%20%20%20%20%20background%3A%20linear-gradient%2890deg%2C%20%2300ffc8%2C%20%2300ccff%29%3B%0A%20%20%20%20%20%20color%3A%20%23000%3B%0A%20%20%20%20%20%20font-weight%3A%20bold%3B%0A%20%20%20%20%20%20padding%3A%2014px%2026px%3B%0A%20%20%20%20%20%20font-size%3A%205vw%3B%0A%20%20%20%20%20%20border%3A%20none%3B%0A%20%20%20%20%20%20border-radius%3A%2050px%3B%0A%20%20%20%20%20%20cursor%3A%20pointer%3B%0A%20%20%20%20%20%20margin-top%3A%2020px%3B%0A%20%20%20%20%20%20box-shadow%3A%200%200%2020px%20rgba%280%2C255%2C200%2C0.3%29%3B%0A%20%20%20%20%20%20transition%3A%200.3s%20ease%3B%0A%20%20%20%20%20%20width%3A%20100%25%3B%0A%20%20%20%20%7D%0A%20%20%20%20button%3Ahover%20%7B%20transform%3A%20scale%281.02%29%3B%20%7D%0A%20%20%20%20.output%20%7B%0A%20%20%20%20%20%20margin-top%3A%2030px%3B%0A%20%20%20%20%20%20width%3A%20100%25%3B%0A%20%20%20%20%7D%0A%20%20%20%20.prompt%20%7B%0A%20%20%20%20%20%20background%3A%20rgba%28255%2C255%2C255%2C0.05%29%3B%0A%20%20%20%20%20%20padding%3A%2018px%3B%0A%20%20%20%20%20%20border-radius%3A%2010px%3B%0A%20%20%20%20%20%20margin-bottom%3A%2015px%3B%0A%20%20%20%20%20%20border-left%3A%205px%20solid%20%2300ffc8%3B%0A%20%20%20%20%20%20backdrop-filter%3A%20blur%286px%29%3B%0A%20%20%20%20%20%20box-shadow%3A%200%202px%208px%20rgba%280%2C0%2C0%2C0.6%29%3B%0A%20%20%20%20%7D%0A%20%20%20%20.prompt%20strong%20%7B%0A%20%20%20%20%20%20font-size%3A%205vw%3B%0A%20%20%20%20%20%20color%3A%20%2300ffc8%3B%0A%20%20%20%20%7D%0A%20%20%20%20.prompt%20p%20%7B%0A%20%20%20%20%20%20font-size%3A%204.5vw%3B%0A%20%20%20%20%20%20line-height%3A%201.4%3B%0A%20%20%20%20%7D%0A%20%20%20%20.copy-btn%20%7B%0A%20%20%20%20%20%20background%3A%20%23222%3B%0A%20%20%20%20%20%20color%3A%20%2300ffc8%3B%0A%20%20%20%20%20%20padding%3A%206px%2012px%3B%0A%20%20%20%20%20%20border%3A%201px%20solid%20%2300ffc8%3B%0A%20%20%20%20%20%20border-radius%3A%208px%3B%0A%20%20%20%20%20%20cursor%3A%20pointer%3B%0A%20%20%20%20%20%20margin-top%3A%2010px%3B%0A%20%20%20%20%20%20font-size%3A%204vw%3B%0A%20%20%20%20%7D%0A%20%20%20%20.copy-btn%3Ahover%20%7B%0A%20%20%20%20%20%20background%3A%20%2300ffc8%3B%0A%20%20%20%20%20%20color%3A%20%23000%3B%0A%20%20%20%20%7D%0A%20%20%20%20.timer%20%7B%0A%20%20%20%20%20%20text-align%3A%20center%3B%0A%20%20%20%20%20%20font-size%3A%204vw%3B%0A%20%20%20%20%20%20color%3A%20%23999%3B%0A%20%20%20%20%20%20margin-top%3A%2010px%3B%0A%20%20%20%20%7D%0A%20%20%20%20footer%20%7B%0A%20%20%20%20%20%20margin-top%3A%2040px%3B%0A%20%20%20%20%20%20color%3A%20%23888%3B%0A%20%20%20%20%20%20font-size%3A%204vw%3B%0A%20%20%20%20%20%20text-align%3A%20center%3B%0A%20%20%20%20%7D%0A%20%20%20%20footer%20a%20%7B%0A%20%20%20%20%20%20color%3A%20%2300ffc8%3B%0A%20%20%20%20%20%20text-decoration%3A%20none%3B%0A%20%20%20%20%20%20margin%3A%200%208px%3B%0A%20%20%20%20%7D%0A%20%20%3C/style%3E%0A%3C/head%3E%0A%3Cbody%3E%0A%20%20%3Ch1%3E%uD83D%uDE80%20EMon%20Prompt%3C/h1%3E%0A%20%20%3Ctextarea%20id%3D%22userInput%22%20placeholder%3D%22Type%20something%20or%20say%3A%20EMon%20give%20a%20prompt...%22%3E%3C/textarea%3E%0A%20%20%3Cinput%20type%3D%22text%22%20id%3D%22userName%22%20placeholder%3D%22Optional%3A%20Add%20name%20%28e.g.%20EMon%29%22%20/%3E%0A%20%20%3Cbutton%20onclick%3D%22generatePrompt%28%29%22%3E%u2728%20Generate%3C/button%3E%0A%0A%20%20%3Cdiv%20id%3D%22result%22%20class%3D%22output%22%3E%3C/div%3E%0A%0A%20%20%3Cfooter%3E%0A%20%20%20%20%3Cp%3EMade%20with%20%u2764%uFE0F%20by%20%3Cstrong%3EEMon-BHai%3C/strong%3E%3C/p%3E%0A%20%20%20%20%3Cp%3E%0A%20%20%20%20%20%20%uD83D%uDCD8%20%3Ca%20href%3D%22https%3A//facebook.com/EMon.BHai.FACEBOOK%22%20target%3D%22_blank%22%3EFacebook%3C/a%3E%20%7C%0A%20%20%20%20%20%20%uD83D%uDCAC%20%3Ca%20href%3D%22https%3A//wa.me/8801309991724%22%20target%3D%22_blank%22%3EWhatsApp%3C/a%3E%0A%20%20%20%20%3C/p%3E%0A%20%20%3C/footer%3E%0A%0A%20%20%3Cscript%3E%0A%20%20%20%20const%20API_KEY%20%3D%20%22AIzaSyDfj1K8t3p9ObXnz1wxjVFSvm3nxDSz8W8%22%3B%0A%20%20%20%20const%20MODEL%20%3D%20%22gemini-2.0-flash%22%3B%0A%0A%20%20%20%20async%20function%20generatePrompt%28%29%20%7B%0A%20%20%20%20%20%20const%20input%20%3D%20document.getElementById%28%22userInput%22%29.value.trim%28%29%3B%0A%20%20%20%20%20%20const%20name%20%3D%20document.getElementById%28%22userName%22%29.value.trim%28%29%3B%0A%20%20%20%20%20%20const%20resultDiv%20%3D%20document.getElementById%28%22result%22%29%3B%0A%0A%20%20%20%20%20%20if%20%28%21input%29%20%7B%0A%20%20%20%20%20%20%20%20alert%28%22Please%20type%20something%21%22%29%3B%0A%20%20%20%20%20%20%20%20return%3B%0A%20%20%20%20%20%20%7D%0A%0A%20%20%20%20%20%20resultDiv.innerHTML%20%3D%20%22%u23F3%20Generating%20prompts...%22%3B%0A%20%20%20%20%20%20const%20start%20%3D%20Date.now%28%29%3B%0A%0A%20%20%20%20%20%20let%20basePrompt%20%3D%20input%3B%0A%0A%20%20%20%20%20%20if%20%28/give.*prompt%7Cprompt%20daw%7Cprompt%20%u09A6%u09BE%u0993%7C%u09AD%u09BE%u0987.*prompt/i.test%28input%29%29%20%7B%0A%20%20%20%20%20%20%20%20basePrompt%20%3D%20%22Generate%20a%20random%20creative%20AI%20image%20prompt.%22%3B%0A%20%20%20%20%20%20%7D%0A%0A%20%20%20%20%20%20if%20%28%28/name%7C%u09A8%u09BE%u09AE%7C%u09B2%u09C7%u0996%u09BE/i.test%28input%29%20%7C%7C%20name%29%20%26%26%20name%20%21%3D%3D%20%22%22%29%20%7B%0A%20%20%20%20%20%20%20%20basePrompt%20+%3D%20%60%20Include%20the%20name%20%22%24%7Bname%7D%22%20inside%20the%20scene%20in%20a%20creative%20way%20%28wall%2C%20shirt%2C%20sky%2C%20etc%29.%60%3B%0A%20%20%20%20%20%20%7D%0A%0A%20%20%20%20%20%20const%20fullPrompt%20%3D%20%60%0AYou%20are%20a%20skilled%20AI%20prompt%20engineer.%20Based%20on%3A%20%22%24%7BbasePrompt%7D%22%2C%20generate%204%20unique%20image%20prompts%3A%0A1.%20Short%20Prompt%0A2.%20Cinematic%20Look%0A3.%20Futuristic%20Style%0A4.%20Dreamy%20/%20Fantasy%20Mood%0A%0AOnly%20return%20the%20prompts.%0A%60%3B%0A%0A%20%20%20%20%20%20try%20%7B%0A%20%20%20%20%20%20%20%20const%20res%20%3D%20await%20fetch%28%60https%3A//generativelanguage.googleapis.com/v1beta/models/%24%7BMODEL%7D%3AgenerateContent%3Fkey%3D%24%7BAPI_KEY%7D%60%2C%20%7B%0A%20%20%20%20%20%20%20%20%20%20method%3A%20%22POST%22%2C%0A%20%20%20%20%20%20%20%20%20%20headers%3A%20%7B%20%22Content-Type%22%3A%20%22application/json%22%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20body%3A%20JSON.stringify%28%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20contents%3A%20%5B%7B%20parts%3A%20%5B%7B%20text%3A%20fullPrompt%20%7D%5D%20%7D%5D%0A%20%20%20%20%20%20%20%20%20%20%7D%29%0A%20%20%20%20%20%20%20%20%7D%29%3B%0A%0A%20%20%20%20%20%20%20%20const%20data%20%3D%20await%20res.json%28%29%3B%0A%20%20%20%20%20%20%20%20const%20text%20%3D%20data%3F.candidates%3F.%5B0%5D%3F.content%3F.parts%3F.%5B0%5D%3F.text%20%7C%7C%20%22%u274C%20No%20response%20from%20AI.%22%3B%0A%20%20%20%20%20%20%20%20const%20prompts%20%3D%20text.split%28/%5Cd+%5C.%5Cs/%29.filter%28p%20%3D%3E%20p.trim%28%29%29%3B%0A%0A%20%20%20%20%20%20%20%20let%20html%20%3D%20%22%22%3B%0A%20%20%20%20%20%20%20%20prompts.forEach%28%28p%2C%20i%29%20%3D%3E%20%7B%0A%20%20%20%20%20%20%20%20%20%20html%20+%3D%20%60%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cdiv%20class%3D%22prompt%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cstrong%3EPrompt%20%24%7Bi%20+%201%7D%3C/strong%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cp%3E%24%7Bp.trim%28%29%7D%3C/p%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cbutton%20class%3D%22copy-btn%22%20onclick%3D%22copyText%28this%29%22%3E%uD83D%uDCCB%20Copy%3C/button%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C/div%3E%60%3B%0A%20%20%20%20%20%20%20%20%7D%29%3B%0A%0A%20%20%20%20%20%20%20%20const%20time%20%3D%20%28%28Date.now%28%29%20-%20start%29%20/%201000%29.toFixed%282%29%3B%0A%20%20%20%20%20%20%20%20resultDiv.innerHTML%20%3D%20html%20+%20%60%3Cdiv%20class%3D%22timer%22%3E%u23F1%uFE0F%20Generated%20in%20%24%7Btime%7Ds%3C/div%3E%60%3B%0A%20%20%20%20%20%20%7D%20catch%20%28err%29%20%7B%0A%20%20%20%20%20%20%20%20console.error%28err%29%3B%0A%20%20%20%20%20%20%20%20resultDiv.innerHTML%20%3D%20%22%u274C%20Error%20occurred.%20Check%20your%20API%20key.%22%3B%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%7D%0A%0A%20%20%20%20function%20copyText%28btn%29%20%7B%0A%20%20%20%20%20%20const%20text%20%3D%20btn.previousElementSibling.innerText%3B%0A%20%20%20%20%20%20navigator.clipboard.writeText%28text%29%3B%0A%20%20%20%20%20%20btn.innerText%20%3D%20%22%u2705%20Copied%21%22%3B%0A%20%20%20%20%20%20setTimeout%28%28%29%20%3D%3E%20btn.innerText%20%3D%20%22%uD83D%uDCCB%20Copy%22%2C%201500%29%3B%0A%20%20%20%20%7D%0A%20%20%3C/script%3E%0A%3C/body%3E%0A%3C/html%3E%0A'));
-</script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EMon Prompt Generator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron&family=Roboto&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: radial-gradient(circle at center, #0f0f0f, #050505);
+      color: #fff;
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 38px;
+      margin-bottom: 20px;
+      background: linear-gradient(to right, #00ffc8, #00ccff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    textarea, input, #imageUpload {
+      width: 100%;
+      max-width: 600px;
+      background: rgba(255,255,255,0.05);
+      color: #ffffff;
+      border: 1px solid #444;
+      padding: 15px;
+      font-size: 16px;
+      border-radius: 10px;
+      margin-top: 15px;
+      backdrop-filter: blur(6px);
+    }
+    button {
+      background: linear-gradient(90deg, #00ffc8, #00ccff);
+      color: #000;
+      font-weight: bold;
+      padding: 12px 28px;
+      font-size: 16px;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      margin-top: 15px;
+      box-shadow: 0 0 20px rgba(0,255,200,0.3);
+      transition: 0.3s ease;
+    }
+    button:hover { transform: scale(1.05); }
+    .output {
+      margin-top: 40px;
+      width: 100%;
+      max-width: 700px;
+    }
+    .prompt {
+      background: rgba(255,255,255,0.05);
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      border-left: 5px solid #00ffc8;
+      backdrop-filter: blur(6px);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.6);
+    }
+    .prompt strong { font-size: 18px; color: #00ffc8; }
+    .copy-btn {
+      background: #222;
+      color: #00ffc8;
+      padding: 6px 14px;
+      border: 1px solid #00ffc8;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    .copy-btn:hover {
+      background: #00ffc8;
+      color: #000;
+    }
+    .timer {
+      text-align: center;
+      font-size: 14px;
+      color: #999;
+      margin-top: 15px;
+    }
+    footer {
+      margin-top: 60px;
+      color: #777;
+      font-size: 14px;
+      text-align: center;
+    }
+    footer a {
+      color: #00ffc8;
+      text-decoration: none;
+      margin: 0 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🚀 EMon Prompt Generator</h1>
+
+  <textarea id="userInput" placeholder="Write your idea or say: EMon give a prompt..."></textarea>
+  <input type="text" id="userName" placeholder="🔤 Optional: Add your name (e.g., EMon)" />
+  <input type="file" id="imageUpload" accept="image/*" />
+
+  <button onclick="generatePrompt()">✨ Generate Prompts</button>
+  <button onclick="describeImage()">🖼️ Describe This Photo</button>
+  <button onclick="promptFromImage()">🎨 Generate Prompt from Photo</button>
+
+  <div id="result" class="output"></div>
+
+  <footer>
+    <p>Made with ❤️ by <strong>EMon-BHai</strong> | Powered by EMON HAWLADAR</p>
+    <p style="margin-top: 8px;">
+      📘 <a href="https://facebook.com/EMon.BHai.FACEBOOK" target="_blank">Facebook</a> |
+      💬 <a href="https://wa.me/8801309991724" target="_blank">WhatsApp</a>
+    </p>
+  </footer>
+
+  <script>
+    const API_KEY = "AIzaSyDfj1K8t3p9ObXnz1wxjVFSvm3nxDSz8W8"; // Replace with your Gemini API key
+    const MODEL = "gemini-1.5-flash"; // or gemini-pro-vision if needed
+
+    async function generatePrompt() {
+      const input = document.getElementById("userInput").value.trim();
+      const name = document.getElementById("userName").value.trim();
+      const resultDiv = document.getElementById("result");
+
+      if (!input) {
+        alert("Please type something!");
+        return;
+      }
+
+      resultDiv.innerHTML = "⏳ Generating prompts...";
+      const start = Date.now();
+
+      let basePrompt = input;
+
+      if (/give.*prompt|prompt daw|prompt দাও|ভাই.*prompt/i.test(input)) {
+        basePrompt = "Generate a random creative AI image prompt.";
+      }
+
+      if ((/name|নাম|লেখা/i.test(input) || name) && name !== "") {
+        basePrompt += ` Include the name "${name}" inside the scene in a creative way (e.g., on a wall, shirt, sky, etc).`;
+      }
+
+      const fullPrompt = `
+You are a skilled AI prompt engineer. Based on this input: "${basePrompt}", generate 4 image prompts:
+1. Short Prompt
+2. Long Cinematic Prompt
+3. Futuristic Style
+4. Dreamy / Fantasy Mood
+
+Only return the prompts. No explanation.
+`;
+
+      try {
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${API_KEY}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: fullPrompt }] }]
+          })
+        });
+
+        const data = await res.json();
+        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || "❌ No response from AI.";
+        const prompts = text.split(/\d+\.\s/).filter(p => p.trim());
+
+        let html = "";
+        prompts.forEach((p, i) => {
+          html += `
+            <div class="prompt">
+              <strong>Prompt ${i + 1}</strong>
+              <p>${p.trim()}</p>
+              <button class="copy-btn" onclick="copyText(this)">📋 Copy</button>
+            </div>`;
+        });
+
+        const time = ((Date.now() - start) / 1000).toFixed(2);
+        resultDiv.innerHTML = html + `<div class="timer">⏱️ Generated in ${time}s</div>`;
+      } catch (err) {
+        console.error(err);
+        resultDiv.innerHTML = "❌ Error occurred. Check your API key.";
+      }
+    }
+
+    function copyText(btn) {
+      const text = btn.previousElementSibling.innerText;
+      navigator.clipboard.writeText(text);
+      btn.innerText = "✅ Copied!";
+      setTimeout(() => btn.innerText = "📋 Copy", 1500);
+    }
+
+    async function getBase64Image() {
+      const file = document.getElementById("imageUpload").files[0];
+      if (!file) return null;
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result.split(',')[1]);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function describeImage() {
+      const resultDiv = document.getElementById("result");
+      const base64 = await getBase64Image();
+      if (!base64) return alert("Please upload an image first!");
+
+      resultDiv.innerHTML = "🔍 Analyzing image...";
+      const start = Date.now();
+
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-vision:generateContent?key=${API_KEY}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{
+            parts: [
+              { inlineData: { mimeType: "image/jpeg", data: base64 } },
+              { text: "Describe what is in this image." }
+            ]
+          }]
+        })
+      });
+
+      const data = await res.json();
+      const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || "❌ No response.";
+      const time = ((Date.now() - start) / 1000).toFixed(2);
+      resultDiv.innerHTML = `
+        <div class="prompt">
+          <strong>🖼️ Image Description</strong>
+          <p>${text}</p>
+          <button class="copy-btn" onclick="copyText(this)">📋 Copy</button>
+        </div>
+        <div class="timer">⏱️ Completed in ${time}s</div>
+      `;
+    }
+
+    async function promptFromImage() {
+      const resultDiv = document.getElementById("result");
+      const base64 = await getBase64Image();
+      if (!base64) return alert("Please upload an image first!");
+
+      resultDiv.innerHTML = "🎨 Generating prompt from image...";
+      const start = Date.now();
+
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-vision:generateContent?key=${API_KEY}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{
+            parts: [
+              { inlineData: { mimeType: "image/jpeg", data: base64 } },
+              { text: "Generate an AI image generation prompt based on this photo." }
+            ]
+          }]
+        })
+      });
+
+      const data = await res.json();
+      const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || "❌ No response.";
+      const time = ((Date.now() - start) / 1000).toFixed(2);
+      resultDiv.innerHTML = `
+        <div class="prompt">
+          <strong>🎨 Generated Prompt</strong>
+          <p>${text}</p>
+          <button class="copy-btn" onclick="copyText(this)">📋 Copy</button>
+        </div>
+        <div class="timer">⏱️ Completed in ${time}s</div>
+      `;
+    }
+  </script>
+</body>
+</html>
