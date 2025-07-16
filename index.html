@@ -6,24 +6,112 @@
   <title>EMon Prompt Generator</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron&family=Roboto&display=swap" rel="stylesheet">
   <style>
-    /* ... [same CSS as before, no changes] ... */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: radial-gradient(circle at center, #0f0f0f, #050505);
+      color: #fff;
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 38px;
+      margin-bottom: 20px;
+      background: linear-gradient(to right, #00ffc8, #00ccff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    textarea, input, #imageUpload {
+      width: 100%;
+      max-width: 600px;
+      background: rgba(255,255,255,0.05);
+      color: #ffffff;
+      border: 1px solid #444;
+      padding: 15px;
+      font-size: 16px;
+      border-radius: 10px;
+      margin-top: 15px;
+      backdrop-filter: blur(6px);
+    }
+    button {
+      background: linear-gradient(90deg, #00ffc8, #00ccff);
+      color: #000;
+      font-weight: bold;
+      padding: 12px 28px;
+      font-size: 16px;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      margin-top: 15px;
+      box-shadow: 0 0 20px rgba(0,255,200,0.3);
+      transition: 0.3s ease;
+    }
+    button:hover { transform: scale(1.05); }
+    .output {
+      margin-top: 40px;
+      width: 100%;
+      max-width: 700px;
+    }
+    .prompt {
+      background: rgba(255,255,255,0.05);
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      border-left: 5px solid #00ffc8;
+      backdrop-filter: blur(6px);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.6);
+    }
+    .prompt strong { font-size: 18px; color: #00ffc8; }
+    .copy-btn {
+      background: #222;
+      color: #00ffc8;
+      padding: 6px 14px;
+      border: 1px solid #00ffc8;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    .copy-btn:hover {
+      background: #00ffc8;
+      color: #000;
+    }
+    .timer {
+      text-align: center;
+      font-size: 14px;
+      color: #999;
+      margin-top: 15px;
+    }
+    footer {
+      margin-top: 60px;
+      color: #777;
+      font-size: 14px;
+      text-align: center;
+    }
+    footer a {
+      color: #00ffc8;
+      text-decoration: none;
+      margin: 0 10px;
+    }
   </style>
 </head>
 <body>
   <h1>🚀 EMon Prompt Generator</h1>
 
   <textarea id="userInput" placeholder="Write your idea or say: EMon give a prompt..."></textarea>
-  <input type="text" id="userName" placeholder="🔤 Optional: & Add your name (e.g., EMon)" />
+  <input type="text" id="userName" placeholder="🔤 Optional: Add your name (e.g., EMon)" />
   <input type="file" id="imageUpload" accept="image/*" />
 
   <button onclick="generatePrompt()">✨ Generate Prompts</button>
   <button onclick="describeImage()">🖼️ Describe This Photo</button>
-  <button onclick="promptFromImage()">🎨 Generate Prompt from Photo</button>
+  <button onclick="promptFromImage()">🎨 Prompt From Photo</button>
 
   <div id="result" class="output"></div>
 
   <footer>
-    <p>Made with ❤️ by <strong>EMon-BHai</strong> | Powered by EMON HAWLADAR</p>
+    <p>Made with ❤️ by <strong>EMon-BHai</strong> | Powered by Gemini Flash</p>
     <p style="margin-top: 8px;">
       📘 <a href="https://facebook.com/EMon.BHai.FACEBOOK" target="_blank">Facebook</a> |
       💬 <a href="https://wa.me/8801309991724" target="_blank">WhatsApp</a>
@@ -32,7 +120,16 @@
 
   <script>
     const API_KEY = "AIzaSyDfj1K8t3p9ObXnz1wxjVFSvm3nxDSz8W8";
-    const MODEL = "gemini-1.5-flash";
+
+    function extractText(data) {
+      try {
+        const parts = data?.candidates?.[0]?.content?.parts;
+        if (!parts || parts.length === 0) return null;
+        return parts.map(p => p.text).join("\n");
+      } catch {
+        return null;
+      }
+    }
 
     async function generatePrompt() {
       const input = document.getElementById("userInput").value.trim();
@@ -51,7 +148,7 @@
       }
 
       if ((/name|নাম|লেখা/i.test(input) || name) && name !== "") {
-        basePrompt += ` Include the name "${name}" inside the scene in a creative way (e.g., on a wall, shirt, sky, etc).`;
+        basePrompt += ` Include the name "${name}" creatively in the scene (like wall, sky, shirt).`;
       }
 
       const fullPrompt = `
@@ -65,7 +162,7 @@ Only return the prompts. No explanation.
 `;
 
       try {
-        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${API_KEY}`, {
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -74,7 +171,7 @@ Only return the prompts. No explanation.
         });
 
         const data = await res.json();
-        const text = extractText(data) || "❌ No prompt response.";
+        const text = extractText(data) || "❌ No prompt received.";
         const prompts = text.split(/\d+\.\s/).filter(p => p.trim());
 
         let html = "";
@@ -91,15 +188,8 @@ Only return the prompts. No explanation.
         resultDiv.innerHTML = html + `<div class="timer">⏱️ Generated in ${time}s</div>`;
       } catch (err) {
         console.error(err);
-        resultDiv.innerHTML = "❌ Error occurred. Check your API key or model.";
+        resultDiv.innerHTML = "❌ Error occurred. Try again.";
       }
-    }
-
-    function copyText(btn) {
-      const text = btn.previousElementSibling.innerText;
-      navigator.clipboard.writeText(text);
-      btn.innerText = "✅ Copied!";
-      setTimeout(() => btn.innerText = "📋 Copy", 1500);
     }
 
     async function getBase64Image() {
@@ -116,9 +206,9 @@ Only return the prompts. No explanation.
     async function describeImage() {
       const resultDiv = document.getElementById("result");
       const base64 = await getBase64Image();
-      if (!base64) return alert("Please upload an image first!");
+      if (!base64) return alert("Please upload a photo first!");
 
-      resultDiv.innerHTML = "🔍 Analyzing image...";
+      resultDiv.innerHTML = "🔍 Analyzing photo...";
       const start = Date.now();
 
       const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-vision:generateContent?key=${API_KEY}`, {
@@ -128,18 +218,18 @@ Only return the prompts. No explanation.
           contents: [{
             parts: [
               { inlineData: { mimeType: "image/jpeg", data: base64 } },
-              { text: "Describe what is in this image." }
+              { text: "Describe what is shown in this image in detail." }
             ]
           }]
         })
       });
 
       const data = await res.json();
-      const text = extractText(data) || "❌ No response.";
+      const text = extractText(data) || "❌ No description found.";
       const time = ((Date.now() - start) / 1000).toFixed(2);
       resultDiv.innerHTML = `
         <div class="prompt">
-          <strong>🖼️ Image Description</strong>
+          <strong>🖼️ Description</strong>
           <p>${text}</p>
           <button class="copy-btn" onclick="copyText(this)">📋 Copy</button>
         </div>
@@ -150,9 +240,9 @@ Only return the prompts. No explanation.
     async function promptFromImage() {
       const resultDiv = document.getElementById("result");
       const base64 = await getBase64Image();
-      if (!base64) return alert("Please upload an image first!");
+      if (!base64) return alert("Please upload a photo first!");
 
-      resultDiv.innerHTML = "🎨 Generating prompt from image...";
+      resultDiv.innerHTML = "🎨 Generating prompt from photo...";
       const start = Date.now();
 
       const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-vision:generateContent?key=${API_KEY}`, {
@@ -169,11 +259,11 @@ Only return the prompts. No explanation.
       });
 
       const data = await res.json();
-      const text = extractText(data) || "❌ No response.";
+      const text = extractText(data) || "❌ No prompt found.";
       const time = ((Date.now() - start) / 1000).toFixed(2);
       resultDiv.innerHTML = `
         <div class="prompt">
-          <strong>🎨 Generated Prompt</strong>
+          <strong>🎨 Prompt from Photo</strong>
           <p>${text}</p>
           <button class="copy-btn" onclick="copyText(this)">📋 Copy</button>
         </div>
@@ -181,13 +271,11 @@ Only return the prompts. No explanation.
       `;
     }
 
-    // ✅ Fix for ❌ No response — Extracts any available text
-    function extractText(data) {
-      try {
-        return data?.candidates?.[0]?.content?.parts?.map(p => p.text).join("\n") || null;
-      } catch {
-        return null;
-      }
+    function copyText(btn) {
+      const text = btn.previousElementSibling.innerText;
+      navigator.clipboard.writeText(text);
+      btn.innerText = "✅ Copied!";
+      setTimeout(() => btn.innerText = "📋 Copy", 1500);
     }
   </script>
 </body>
