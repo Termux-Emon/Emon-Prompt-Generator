@@ -1,201 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>EMon AI Prompt + Photo Tool</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron&family=Roboto&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <title>EMon AI</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Roboto', sans-serif;
-      background: radial-gradient(circle at center, #0f0f0f, #050505);
-      color: #fff;
-      padding: 40px 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    h1 {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 38px;
-      margin-bottom: 20px;
-      background: linear-gradient(to right, #00ffc8, #00ccff);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    textarea, input, #imageUpload {
-      width: 100%;
-      max-width: 600px;
-      background: rgba(255,255,255,0.05);
-      color: #ffffff;
-      border: 1px solid #444;
-      padding: 15px;
-      font-size: 16px;
-      border-radius: 10px;
-      margin-top: 15px;
-      backdrop-filter: blur(6px);
-    }
-    button {
-      background: linear-gradient(90deg, #00ffc8, #00ccff);
-      color: #000;
-      font-weight: bold;
-      padding: 12px 28px;
-      font-size: 16px;
-      border: none;
-      border-radius: 50px;
-      cursor: pointer;
-      margin: 10px;
-      box-shadow: 0 0 20px rgba(0,255,200,0.3);
-      transition: 0.3s ease;
-    }
-    button:hover { transform: scale(1.05); }
-    .output {
-      margin-top: 30px;
-      width: 100%;
-      max-width: 700px;
-    }
-    .prompt {
-      background: rgba(255,255,255,0.05);
-      padding: 20px;
-      border-radius: 10px;
-      margin-bottom: 20px;
-      border-left: 5px solid #00ffc8;
-      backdrop-filter: blur(6px);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.6);
-    }
-    .prompt strong { font-size: 18px; color: #00ffc8; }
-    .copy-btn {
-      background: #222;
-      color: #00ffc8;
-      padding: 6px 14px;
-      border: 1px solid #00ffc8;
-      border-radius: 8px;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-    .copy-btn:hover {
-      background: #00ffc8;
-      color: #000;
-    }
-    .timer {
-      text-align: center;
-      font-size: 14px;
-      color: #999;
-      margin-top: 15px;
-    }
-    footer {
-      margin-top: 60px;
-      color: #777;
-      font-size: 14px;
-      text-align: center;
-    }
-    footer a {
-      color: #00ffc8;
-      text-decoration: none;
-      margin: 0 10px;
-    }
+    body { background:#111; color:#fff; font-family: sans-serif; text-align: center; padding:30px; }
+    input, textarea, button { margin:10px; padding:10px; border-radius:10px; }
+    textarea { width:90%; height:150px; }
+    input[type="file"] { border:1px solid #555; padding:5px; }
+    button { background: linear-gradient(90deg, #00ffc8, #00ccff); border: none; font-weight:bold; }
+    .result { margin-top: 30px; background:#1a1a1a; padding:20px; border-radius:10px; }
   </style>
 </head>
 <body>
-  <h1>🚀 EMon AI Prompt + Photo Tool</h1>
-
-  <textarea id="userInput" placeholder="Write your idea or say: EMon give a prompt..."></textarea>
-  <input type="text" id="userName" placeholder="🔤 Optional: Add your name (e.g., EMon)" />
+  <h1>📸 EMon AI Photo Describer</h1>
   <input type="file" id="imageUpload" accept="image/*" />
-
-  <div>
-    <button onclick="generatePrompt()">✨ Generate Prompts</button>
-    <button onclick="describeWithReplicate()">🧠 Describe Image</button>
-    <button onclick="generatePromptFromImage()">🎨 Prompt From Image</button>
-  </div>
-
-  <div id="result" class="output"></div>
-
-  <footer>
-    <p>Made with ❤️ by <strong>EMon-BHai</strong> | Gemini + Replicate</p>
-    <p style="margin-top: 8px;">
-      📘 <a href="https://facebook.com/EMon.BHai.FACEBOOK" target="_blank">Facebook</a> |
-      💬 <a href="https://wa.me/8801309991724" target="_blank">WhatsApp</a>
-    </p>
-  </footer>
+  <button onclick="describeImage()">🧠 Describe Image</button>
+  <div id="result" class="result"></div>
 
   <script>
-    const GEMINI_KEY = "AIzaSyDfj1K8t3p9ObXnz1wxjVFSvm3nxDSz8W8";
     const REPLICATE_TOKEN = "r8_0MwMLnMbrQhdgaE1OSg4UgtP5gFI5m74XbIhK";
+    const IMGBB_API_KEY = "ac85cee79615c58f66c0b75e6a0f9cbd";
 
-    function extractText(data) {
-      try {
-        const parts = data?.candidates?.[0]?.content?.parts;
-        return parts ? parts.map(p => p.text).join("\n") : null;
-      } catch {
-        return null;
-      }
-    }
-
-    async function generatePrompt() {
-      const input = document.getElementById("userInput").value.trim();
-      const name = document.getElementById("userName").value.trim();
-      const resultDiv = document.getElementById("result");
-      if (!input) return alert("Type something!");
-
-      resultDiv.innerHTML = "⏳ Generating prompts...";
-      const start = Date.now();
-
-      let basePrompt = input;
-      if (/give.*prompt|prompt daw|prompt দাও/i.test(input)) {
-        basePrompt = "Generate a random creative AI image prompt.";
-      }
-      if (name) {
-        basePrompt += ` Include the name "${name}" creatively.`;
-      }
-
-      const prompt = `
-You are a creative AI. Based on this input: "${basePrompt}", generate 4 image prompts:
-1. Short Prompt
-2. Long Cinematic Prompt
-3. Futuristic Style
-4. Dreamy / Fantasy Mood
-Only return the prompts.
-`;
-
-      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-      });
-      const data = await res.json();
-      const text = extractText(data) || "❌ No prompt found.";
-      const prompts = text.split(/\d+\.\s/).filter(p => p.trim());
-
-      const time = ((Date.now() - start) / 1000).toFixed(2);
-      resultDiv.innerHTML = prompts.map((p, i) => `
-        <div class="prompt">
-          <strong>Prompt ${i + 1}</strong>
-          <p>${p.trim()}</p>
-          <button class="copy-btn" onclick="copyText(this)">📋 Copy</button>
-        </div>
-      `).join('') + `<div class="timer">⏱️ Generated in ${time}s</div>`;
-    }
-
-    async function describeWithReplicate() {
+    async function describeImage() {
       const file = document.getElementById("imageUpload").files[0];
       const result = document.getElementById("result");
-      if (!file) return alert("Upload an image first!");
+      if (!file) return alert("Please select an image.");
 
       result.innerHTML = "🖼️ Uploading image...";
+
       const formData = new FormData();
-      formData.append("file", file);
+      formData.append("image", file);
 
-      const uploadRes = await fetch("https://api.imgbb.com/1/upload?key=4b9d6d7b7efb351b0f6a9c0157f88e89", {
-        method: "POST",
-        body: formData
-      });
-      const uploadData = await uploadRes.json();
-      const imageUrl = uploadData.data?.url;
-      if (!imageUrl) return result.innerHTML = "❌ Image upload failed.";
+      let imageUrl = null;
 
-      result.innerHTML = "🧠 Describing image...";
-      const start = Date.now();
+      // First try imgbb
+      try {
+        const upload = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+          method: "POST",
+          body: formData
+        });
+        const uploadData = await upload.json();
+        if (uploadData.success) {
+          imageUrl = uploadData.data.url;
+          console.log("✅ Uploaded via imgbb:", imageUrl);
+        }
+      } catch (e) {
+        console.warn("imgbb failed:", e);
+      }
+
+      // If imgbb fails, fallback to file.io
+      if (!imageUrl) {
+        const backupForm = new FormData();
+        backupForm.append("file", file);
+        const upload = await fetch("https://file.io/?expires=1d", {
+          method: "POST",
+          body: backupForm
+        });
+        const data = await upload.json();
+        imageUrl = data.link;
+        console.log("✅ Uploaded via file.io:", imageUrl);
+      }
+
+      if (!imageUrl) {
+        result.innerHTML = "❌ Upload failed (imgbb + file.io).";
+        return;
+      }
+
+      result.innerHTML = "🧠 Generating description...";
+
+      // Replicate request
       const prediction = await fetch("https://api.replicate.com/v1/predictions", {
         method: "POST",
         headers: {
@@ -209,78 +83,39 @@ Only return the prompts.
       }).then(r => r.json());
 
       const getUrl = prediction?.urls?.get;
-      if (!getUrl) return result.innerHTML = "❌ Replicate failed.";
+      if (!getUrl) {
+        result.innerHTML = "❌ Replicate prediction failed.";
+        return;
+      }
 
+      // Poll until success
       let output;
       while (!output) {
-        const res = await fetch(getUrl, {
+        const poll = await fetch(getUrl, {
           headers: { "Authorization": `Token ${REPLICATE_TOKEN}` }
         });
-        const data = await res.json();
-        if (data.status === "succeeded") {
-          output = data.output;
+        const pollData = await poll.json();
+        if (pollData.status === "succeeded") {
+          output = pollData.output;
           break;
-        } else if (data.status === "failed") {
-          result.innerHTML = "❌ Description failed.";
+        } else if (pollData.status === "failed") {
+          result.innerHTML = "❌ Replicate generation failed.";
           return;
         }
         await new Promise(r => setTimeout(r, 1000));
       }
 
-      const time = ((Date.now() - start) / 1000).toFixed(2);
       result.innerHTML = `
-        <div class="prompt">
-          <strong>🧠 Image Description (Replicate)</strong>
-          <p>${output}</p>
-          <button class="copy-btn" onclick="copyText(this)">📋 Copy</button>
-        </div>
-        <div class="timer">⏱️ Completed in ${time}s</div>
+        <h3>🧠 AI Description:</h3>
+        <p>${output}</p>
+        <button onclick="copyResult()">📋 Copy</button>
       `;
     }
 
-    async function generatePromptFromImage() {
-      const file = document.getElementById("imageUpload").files[0];
-      const result = document.getElementById("result");
-      if (!file) return alert("Upload an image first!");
-
-      const reader = new FileReader();
-      reader.onload = async () => {
-        const base64 = reader.result.split(",")[1];
-        result.innerHTML = "🎨 Generating prompt from photo...";
-        const start = Date.now();
-
-        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-vision:generateContent?key=${GEMINI_KEY}`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            contents: [{
-              parts: [
-                { inlineData: { mimeType: "image/jpeg", data: base64 } },
-                { text: "Generate an AI image prompt based on this photo." }
-              ]
-            }]
-          })
-        });
-        const data = await res.json();
-        const text = extractText(data) || "❌ No prompt found.";
-        const time = ((Date.now() - start) / 1000).toFixed(2);
-        result.innerHTML = `
-          <div class="prompt">
-            <strong>🎨 Prompt From Image</strong>
-            <p>${text}</p>
-            <button class="copy-btn" onclick="copyText(this)">📋 Copy</button>
-          </div>
-          <div class="timer">⏱️ Done in ${time}s</div>
-        `;
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function copyText(btn) {
-      const text = btn.previousElementSibling.innerText;
+    function copyResult() {
+      const text = document.querySelector("#result p").innerText;
       navigator.clipboard.writeText(text);
-      btn.innerText = "✅ Copied!";
-      setTimeout(() => btn.innerText = "📋 Copy", 1500);
+      alert("✅ Copied!");
     }
   </script>
 </body>
